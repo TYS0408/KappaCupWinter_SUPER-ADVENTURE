@@ -25,5 +25,15 @@ public:
 	ModelRender m_StagemodelRender;//ノコノコステージ
 	PhysicsStaticObject m_StagephysicsStaticObject;//ノコノコステージ
 	Vector3 m_StagePos;
+
+	//クリボー＆ノコノコステージ
+	ModelRender m_Stage2modelRender;
+	PhysicsStaticObject m_Stage2physicsStaticObject;
+	Vector3 m_Stage2Pos;
+
+	//橋のオブジェクト
+	ModelRender m_BrigemodelRender;
+	PhysicsStaticObject m_BrigephysicsStaticObject;
+	Vector3 m_BrigePos;
 };
 

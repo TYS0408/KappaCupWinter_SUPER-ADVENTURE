@@ -158,6 +158,13 @@ void Enemy1::SearchPlayer()
 	Vector3 playerPos = m_player->GetPos();
 	Vector3 diff = playerPos - m_position;
 
+	//追跡可能距離
+	const float CHASEDISTANCE = 300.0f;
+	float distance = diff.Length();
+	if (distance >= CHASEDISTANCE)
+	{
+		return;
+	}
 	diff.Normalize();
 	float angle = acosf(diff.Dot(m_forward));//Dot = 内積
 	//プレイヤーが視界内になかったら。

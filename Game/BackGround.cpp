@@ -27,11 +27,26 @@ BackGround::BackGround()
 	//ノコノコステージ
 	m_StagemodelRender.Init("Assets/Stage/Stage_Object_floor2.tkm");
 	m_StagemodelRender.SetScale(SCALE);
-	m_StagePos = Vector3(400.0f, 300.0f, 1750.0f);
+	m_StagePos = Vector3(650.0f, 300.0f, 1750.0f);
 	m_StagemodelRender.SetPosition(m_StagePos);
 	m_StagemodelRender.Update();
 	m_StagephysicsStaticObject.CreateFromModel(m_StagemodelRender.GetModel(), m_StagemodelRender.GetModel().GetWorldMatrix());
 
+	//クリボー&ノコノコステージ
+	m_Stage2modelRender.Init("Assets/Stage/Stage_Object_floor2.tkm");
+	m_Stage2modelRender.SetScale(SCALE);
+	m_Stage2Pos = Vector3(-650.0f, 300.0f, 1750.0f);
+	m_Stage2modelRender.SetPosition(m_Stage2Pos);
+	m_Stage2modelRender.Update();
+	m_Stage2physicsStaticObject.CreateFromModel(m_Stage2modelRender.GetModel(), m_Stage2modelRender.GetModel().GetWorldMatrix());
+
+	//橋のオブジェクト
+	m_BrigemodelRender.Init("Assets/Stage/Stage_Object_Brige.tkm");
+	m_BrigemodelRender.SetScale(SCALE);
+	m_BrigePos = Vector3(0.0f, 180.0f, 1900.0f);
+	m_BrigemodelRender.SetPosition(m_BrigePos);
+	m_BrigemodelRender.Update();
+	m_BrigephysicsStaticObject.CreateFromModel(m_BrigemodelRender.GetModel(), m_BrigemodelRender.GetModel().GetWorldMatrix());
 	//当たり判定描画
 	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 }
@@ -47,4 +62,6 @@ void BackGround::Render(RenderContext& rc)
 	m_modelRender.Draw(rc);
 	m_DemoStagemodelRender.Draw(rc);
 	m_StagemodelRender.Draw(rc);
+	m_Stage2modelRender.Draw(rc);
+	m_BrigemodelRender.Draw(rc);
 }

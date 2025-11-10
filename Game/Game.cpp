@@ -48,7 +48,27 @@ bool Game::Start()
 
 void Game::Update()
 {
+	TimerDraw();
+}
 
+void Game::TimerDraw()
+{
+
+	//残り時間のテキスト
+	int minute = (int)m_LimitTime / 60;
+	int seconds = (int)m_LimitTime % 60;
+
+	m_LimitTime -= g_gameTime->GetFrameDeltaTime();
+	wchar_t timerText[256];
+	swprintf_s(timerText, 256, L"残り時間:%02d:%02d", minute, seconds);
+
+	timerFontRender.SetText(timerText);
+	//座標
+	timerFontRender.SetPosition({ -300.0f,540.0f,0.0f });
+	//文字の大きさ
+	timerFontRender.SetScale(1.5f);
+	//文字の色
+	timerFontRender.SetColor(g_vec4White);
 }
 
 void Game::InitSky()
@@ -62,7 +82,7 @@ void Game::InitSky()
 	g_renderingEngine->SetDirectionLight(0, g_vec3Zero, g_vec3Zero);
 }
 
-//void Game::Render(RenderContext& rc)
-//{
-//	m_modelRender.Draw(rc);
-//}
+void Game::Render(RenderContext& rc)
+{
+	timerFontRender.Draw(rc);
+}

@@ -11,9 +11,13 @@ public:
 	Game();
 	~Game();
 	bool Start();
+
 	void Update();
+
 	void InitSky();
-	//void Render(RenderContext& rc);
+
+	void TimerDraw();//タイマーの表示
+	void Render(RenderContext& rc);
 private:
 	//敵の配列
 	//全てnullptrで初期化している
@@ -33,7 +37,9 @@ private:
 
 	SkyCube* m_skycube;
 
+	FontRender timerFontRender;
+
 	int m_SkyCubeType = enSkyCubeType_DayToon;
-	
+	float m_LimitTime = 90.0f;//残り時間
 };
 
