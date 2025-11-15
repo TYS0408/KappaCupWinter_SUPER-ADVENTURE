@@ -120,7 +120,7 @@ void Player::Move()
 	else
 	{
 		//重力処理
-		m_moveSpeed.y -= 8.0 * 3.0f;
+		m_moveSpeed.y -= 8.0 * 4.0f;
 	}
 	//リスポーン処理
 	if (m_position.y <= -1000.0f)
@@ -145,6 +145,7 @@ void Player::Rotation()
 		m_modelRender.SetRotation(m_rot);
 	}
 }
+
 
 
 void Player::ManageState()
@@ -203,5 +204,9 @@ void Player::PlayAnimation()
 
 void Player::Render(RenderContext& rc)
 {
-	m_modelRender.Draw(rc);
+	if (m_isVisible)
+	{
+		m_modelRender.Draw(rc);
+	}
+	
 }

@@ -5,6 +5,9 @@
 
 bool GameCamera::Start()
 {
+
+	m_player = FindGO<Player>("player");
+
 	m_CameraPos.Set(0.0f, 125.0f, -250.0f);
 
 	//カメラのニアクリップとファークリップを設定する
@@ -16,17 +19,17 @@ bool GameCamera::Start()
 
 void GameCamera::Update()
 {
-	// まだプレイヤーのポインタを保持していないなら探す
-	if (m_player == nullptr) 
-	{
-		m_player = FindGO<Player>("player");
-		if (m_player == nullptr) 
+	//プレイヤーが見つかっても座標が (0,0,0) のまま のタイミングがあり得る。
+	// //まだプレイヤーのポインタを保持していないなら探す
+	//if (m_player == nullptr)
+	//{
+	//	m_player = FindGO<Player>("player");
+		if (m_player == nullptr)
 		{
 			// プレイヤーがまだ見つからなければ何もしない
 			return;
 		}
-	}
-
+	//}
 
 	//注視点を計算
 	Vector3 target = m_player->m_position;
@@ -52,6 +55,10 @@ void GameCamera::Update()
 	//「カメラの右方向」を現在の m_CameraPos から正しく計算し、
     //それを使ってX軸回転を行っている。
 	Vector3 forward = m_CameraPos;
+	if (forward.LengthSq() > 0.0001f)
+		forward.Normalize();
+	else
+		forward = Vector3(0, 0, 1);   // 安全なデフォルト方向
 	forward.Normalize();
 
 	// ワールド上方向
@@ -77,10 +84,24 @@ void GameCamera::Update()
 	}
 	//視点の計算
 	Vector3 pos = target + m_CameraPos;
+
+
+	////カメラ回転後
+	//if (m_CameraPos.LengthSq() < 1.0f) {
+	//	// ありえない位置になった場合、安全な距離に戻す
+	//	m_CameraPos = Vector3(0.0f, 125.0f, -250.0f);
+	//}
+
+	////改訂版
+	//if ((pos - target).LengthSq() < 0.0001f)
+	//{
+	//	
+	//	pos = target + Vector3(0, 10, -50);
+	//}
 	//メインカメラに注視点と視点を設定
 	g_camera3D->SetTarget(target);
 	g_camera3D->SetPosition(pos);
-//カメラの更新
+    //カメラの更新
 	g_camera3D->Update();
 
 

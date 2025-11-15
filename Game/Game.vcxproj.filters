@@ -16,6 +16,9 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="Enemy1.cpp" />
+    <ClCompile Include="GameOver.cpp" />
+    <ClCompile Include="GameClear.cpp" />
+    <ClCompile Include="Title.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -27,5 +30,8 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="Enemy1.h" />
+    <ClInclude Include="GameOver.h" />
+    <ClInclude Include="GameClear.h" />
+    <ClInclude Include="Title.h" />
   </ItemGroup>
 </Project>
