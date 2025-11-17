@@ -17,7 +17,7 @@ BackGround::BackGround()
 
 
 	//“–‚½‚è”»’è•`‰æ
-	PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
+	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 }
 
 BackGround::~BackGround()

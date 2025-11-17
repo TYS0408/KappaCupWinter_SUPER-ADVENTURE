@@ -204,9 +204,6 @@ void Player::PlayAnimation()
 
 void Player::Render(RenderContext& rc)
 {
-	if (m_isVisible)
-	{
-		m_modelRender.Draw(rc);
-	}
+	m_modelRender.Draw(rc);
 	
 }

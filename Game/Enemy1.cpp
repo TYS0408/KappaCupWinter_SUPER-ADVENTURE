@@ -205,11 +205,6 @@ void Enemy1:: Damege(Player*m_player)
 			{
 				if(m_player->m_HP > 0)
 				m_player->m_HP --;
-
-				//–³“GŽžŠÔˆ—
-				m_player->m_isInvincible = true;
-
-				m_player->m_invincibleTimer = 0.0f;
 			}
 		}
 	);

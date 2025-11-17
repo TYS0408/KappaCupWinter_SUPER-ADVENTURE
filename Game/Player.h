@@ -16,7 +16,6 @@ public:
 
 	void ManageState();
 
-	void Invincible();
 
 	void PlayAnimation();
 

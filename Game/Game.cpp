@@ -128,15 +128,14 @@ void Game::TimerDraw()
 {
 
 	//残り時間のテキスト
-	int minute = (int)m_LimitTime / 60;
-	int seconds = (int)m_LimitTime % 60;
+	//int minute = (int)m_LimitTime / 60;
+	int seconds = (int)m_LimitTime;
 	m_LimitTime -= g_gameTime->GetFrameDeltaTime();
 	wchar_t timerText[256];
-	swprintf_s(timerText, 256, L"残り時間:%02d:%02d", minute, seconds);
+	swprintf_s(timerText, 256, L"残り時間:%03d", seconds);
 
 	timerFontRender.SetText(timerText);
 	//座標
-	
 	timerFontRender.SetPosition({ -300.0f,540.0f,0.0f });
 	//文字の大きさ
 	timerFontRender.SetScale(1.5f);
