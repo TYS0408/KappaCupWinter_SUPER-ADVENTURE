@@ -39,6 +39,20 @@ void Player::Update()
 	PlayAnimation();
 	//更新処理
 	m_modelRender.Update();
+
+	//無敵時間処理
+	if (InvincibleJuge)
+	{
+		//時間を減らす処理
+		InvincibleTime -= g_gameTime->GetFrameDeltaTime();
+
+		//無敵時間が終わったら無敵を解除
+		if (InvincibleTime <=0.0f)
+		{
+			InvincibleJuge = false;
+			InvincibleTime = 0.0f;
+		}
+	}
 }
 
 void Player::Move()
@@ -120,7 +134,7 @@ void Player::Move()
 	else
 	{
 		//重力処理
-		m_moveSpeed.y -= 8.0 * 4.0f;
+		m_moveSpeed.y -= 8.0 * 3.0f;
 	}
 	//リスポーン処理
 	if (m_position.y <= -1000.0f)
@@ -205,5 +219,7 @@ void Player::PlayAnimation()
 void Player::Render(RenderContext& rc)
 {
 	m_modelRender.Draw(rc);
+
+
 	
 }

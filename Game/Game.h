@@ -5,6 +5,9 @@ class Enemy1;
 class BackGround;
 class GameCamera;
 class GameOver;
+class Enemy2;
+class AppearStage;
+class TimerImage;
 class Game : public IGameObject
 {
 public:
@@ -20,13 +23,9 @@ public:
 
 	void Render(RenderContext& rc);
 
-	
+	//敵を倒したときにステージを出すための変数
+	int m_killCount = 0;
 private:
-	
-	
-
-	
-	
 	//エネミーの配列
 	Vector3 m_pos[3] =
 	{
@@ -59,9 +58,16 @@ private:
 
 	GameOver* m_gameOver = nullptr;//ゲームオーバー
 
-	int m_SkyCubeType = enSkyCubeType_DayToon;
+	Enemy2* m_enemy2 = nullptr;//ノコノコ枠
+
+	AppearStage* m_appearStage = nullptr;//クリボーを三体倒すと現れるステージ
+
+	TimerImage* m_timerImage = nullptr;
+	int m_SkyCubeType = enSkyCubeType_NightToon_2;
+
 	//float m_LimitTime = 90.0f;//残り時間
 	float m_LimitTime = 30.0f;//残り時間
+
 	bool isEnd = false;
 };
 

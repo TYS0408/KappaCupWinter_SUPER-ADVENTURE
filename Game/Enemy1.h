@@ -1,5 +1,6 @@
 #pragma once
 class Player;
+class Game;
 class Enemy1 : public IGameObject
 {
 public:
@@ -33,6 +34,8 @@ public:
 		m_position = pos;
     }*/
 	Vector3 m_position;//エネミーのポジション;
+
+	Game* m_game = nullptr;
 private:
 
 	int m_enemy1State = 0;//エネミーのステート
@@ -50,7 +53,9 @@ private:
 
 		Vector3 m_moveSpeed;//移動速度
 
-		Vector3 m_size = Vector3(30.0f, 30.0f, 30.0f);//ゴーストオブジェクトの大きさ
+		Vector3 m_HeadSize = Vector3(50.0f, 50.0f, 50.0f);//ゴーストオブジェクトの大きさ
+
+		Vector3 m_BodySize = Vector3(100.0f, 100.0f, 100.0f);//身体用のゴーストオブジェクトの大きさ
 
 		Quaternion m_rotation;//回転
 		
@@ -61,6 +66,8 @@ private:
 		CharacterController m_characterController;//キャラコン
 
 		Player* m_player = nullptr;//プレイヤーポインター
+
+		
 
 		PhysicsGhostObject m_GhostObjHead;//敵を倒す用のゴーストオブジェクト
         

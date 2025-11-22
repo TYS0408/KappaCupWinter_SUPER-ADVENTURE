@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Enemy1.h"
+#include"Game.h"
 #include"Player.h"
 
 
@@ -13,14 +14,14 @@ Enemy1::Enemy1()
 	animationClips[enAnimationClip_Attack].SetLoopFlag(true);
 	animationClips[enAnimationClip_Dead].Load("Assets/Enemy_animData/Enemy1_Dead2.tka");
 	animationClips[enAnimationClip_Dead].SetLoopFlag(false);
-	animationClips[enAnimationClip_Walk].Load("Assets/Enemy_animData/Enemy1_Walk2.tka");
+	animationClips[enAnimationClip_Walk].Load("Assets/Enemy_animData/Enemy1_Walk.tka");
 	animationClips[enAnimationClip_Walk].SetLoopFlag(true);
 	m_modelRender.Init("Assets/Stage/Enemy1_Model.tkm", animationClips, enAnimationClip_Num, enModelUpAxisZ);
 }
 
 Enemy1::~Enemy1()
 {
-
+	
 }
 
 
@@ -41,13 +42,13 @@ bool Enemy1::Start()
 	m_GhostObjHead.CreateBox(
 		nsK2EngineLow::Vector3(0.0f, 90.0f, 0.0f) + m_position,//基準にするためにm_positionを加算
 		Quaternion::Identity,//回転していない状態（＝単位クォータニオン）
-		nsK2EngineLow::Vector3(m_size));
+		nsK2EngineLow::Vector3(m_HeadSize));
 
 	//ゴーストオブジェクト(胴体)の作成
 	m_GhostObjBody.CreateBox(
-		nsK2EngineLow::Vector3(0.0f, 50.0f, 100.0f) + m_position,//基準にするためにm_positionを加算
+		nsK2EngineLow::Vector3(0.0f, 0.0f, 0.0f) + m_position,//基準にするためにm_positionを加算
 		Quaternion::Identity,//回転していない状態（＝単位クォータニオン）
-		nsK2EngineLow::Vector3(m_size));
+		nsK2EngineLow::Vector3(m_BodySize));
 
 	return true;
 }
@@ -137,7 +138,7 @@ void Enemy1::TracKing()
 		m_modelRender.SetPosition(m_position);
 		//ゴーストオブジェクトをセット
 		m_GhostObjHead.SetPosition(m_position + Vector3(0.0f, 130.0f, 0.0f));
-		m_GhostObjBody.SetPosition(m_position + Vector3(0.0f, 70.0f, -100.0f));
+		m_GhostObjBody.SetPosition(m_position + Vector3(0.0f, 30.0f, 0.0f));//50.0f, 80.0f, -60.0f));
 	}
 }
 
@@ -180,13 +181,14 @@ struct SweepResultWall : public btCollisionWorld::ConvexResultCallback
 };
 
 
-void Enemy1:: Damege(Player*m_player)
+void Enemy1:: Damege(Player* m_player)
 {
 	if (m_player == nullptr)
 	{
 		return;
 	}
 
+	
 
 
 	//まとめると、「今回プレイヤーがぶつかったのは、自分（Enemy1）の頭の当たり判定か？」を判定するコード
@@ -196,30 +198,47 @@ void Enemy1:: Damege(Player*m_player)
 			//「接触相手が 敵の頭（ゴースト） かどうか」を判定する関数
 			if (m_GhostObjHead.IsSelf(contactObject))
 			{
-
 				IsDead = true;
-
 			}
-//接触相手が敵の胴体(ゴースト)かどうかを判定する関数			
+            //接触相手が敵の胴体(ゴースト)かどうかを判定する関数			
 			if (m_GhostObjBody.IsSelf(contactObject))
 			{
-				if(m_player->m_HP > 0)
-				m_player->m_HP --;
+				if (m_player->m_HP > 0 and m_player->InvincibleJuge == false)
+				{
+					m_player->m_HP--;
+					//無敵時間処理
+					m_player->InvincibleJuge = true;
+					m_player->InvincibleTime = 3.0f;
+				
+				}
 			}
 		}
 	);
 
 }
-
 void Enemy1::Dead()
 {
 	//エネミーが死んだら
 	if (IsDead == true)
 	{
+		//エネミーが死んだらゴーストオブジェクト(頭)を削除する
+		PhysicsWorld::GetInstance()->RemoveCollisionObject(m_GhostObjHead.GetbtCollisionObject());
+
+		//エネミーが死んだらゴーストオブジェクトを(胴体)削除する
+		PhysicsWorld::GetInstance()->RemoveCollisionObject(m_GhostObjBody.GetbtCollisionObject());
+
+		//PhysicsWorld::GetInstance()->RemoveCollisionObject(m_sphereCollider.GetBody());
 		//死んだときのアニメーションを1度だけ再生
 		if (DeathAnimation == false)
 		{
 			m_modelRender.PlayAnimation(enAnimationClip_Dead);
+
+			m_game = FindGO<Game>("game");
+	
+			if (m_game != nullptr)
+			{
+				m_game->m_killCount++;
+			}
 			DeathAnimation = true;
 		}
 		//アニメーションが終了したら削除する
