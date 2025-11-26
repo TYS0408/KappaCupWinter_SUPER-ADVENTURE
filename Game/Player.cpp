@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Player.h"
-
+#include"GameOver.h"
+#include"Game.h"
+#include"Title.h"
 Player::Player()
 {
 	//アニメーションクリップを読み込む
@@ -144,6 +146,23 @@ void Player::Move()
 		m_characterController.SetPosition(m_position);
 		m_modelRender.SetPosition(m_position);
 	}
+
+
+	/*if (m_position.y <= -1000.0f)
+	{
+		if (m_gameover == nullptr)
+		{
+			m_gameover = NewGO<GameOver>(0, "gameover");
+			m_isDead = true;
+			return;
+		}
+		
+
+		if (m_isDead == true)
+		{
+			DeleteGO(m_gameover);
+		}
+	}*/
 	
 	
 	//プレイヤーを動くようにする。

@@ -1,4 +1,5 @@
 #pragma once
+class GameOver;
 class Player : public IGameObject
 {
 public:
@@ -40,17 +41,20 @@ public:
 	float InvincibleTime = 3.0f;//無敵時間
 
     
+	Vector3 m_moveSpeed = Vector3::Zero;//移動処理
+
 private:
 	//メンバ関数
 	ModelRender m_modelRender;
 
-	Vector3 m_moveSpeed = Vector3::Zero;//移動処理
-
+	
 	Vector3 m_respawn;//リスポーン
 
 	Quaternion m_rot;//回転処理
 
 	CharacterController m_characterController;//当たり判定
+
+	GameOver* m_gameover = nullptr;
 
 
 	bool IsDead = false;//死亡フラグ

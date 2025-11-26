@@ -188,9 +188,6 @@ void Enemy1:: Damege(Player* m_player)
 		return;
 	}
 
-	
-
-
 	//まとめると、「今回プレイヤーがぶつかったのは、自分（Enemy1）の頭の当たり判定か？」を判定するコード
 	//contactObject は 「プレイヤーと接触している相手」
 	PhysicsWorld::GetInstance()->ContactTest(m_player->GetCharacterController(), [&](const btCollisionObject& contactObject)
@@ -199,6 +196,12 @@ void Enemy1:: Damege(Player* m_player)
 			if (m_GhostObjHead.IsSelf(contactObject))
 			{
 				IsDead = true;
+
+				m_player->m_moveSpeed.y = 700.0f;
+				//m_modelRender.SetPosition(m_moveSpeed);
+
+				
+
 			}
             //接触相手が敵の胴体(ゴースト)かどうかを判定する関数			
 			if (m_GhostObjBody.IsSelf(contactObject))

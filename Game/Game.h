@@ -25,16 +25,27 @@ public:
 
 	//敵を倒したときにステージを出すための変数
 	int m_killCount = 0;
+
+	bool IsCreateBone = false;//敵を倒したときに骨に切り替えるフラグ
 private:
-	//エネミーの配列
-	Vector3 m_pos[3] =
+	//エネミー1の配列
+	/*Vector3 m_pos[3] =
 	{
 		{0.0f,0.0f,400.0f,},
 	   {200.0f,0.0f,400.0f},
 		{-200.0f,0.0f,400.0f},
 	};
 
+	Vector3 m_pos2[3] =
+	{
+		{0.0f,250.0f,1000.0f},
+		{200.0f,250.0f,1000.0f},
+		{-200.0f,250.0f,1000.0f},
+	};*/
+
 	ModelRender m_modelRender;
+
+	ModelRender m_BoneModelRender;//骨用のモデルレンダー
 
 	FontRender timerFontRender;//時間表示
 
@@ -45,6 +56,8 @@ private:
 	//敵の配列
 	//全てnullptrで初期化している
 	Enemy1* m_enemy[3] = {};
+
+	Enemy2* m_enemy2[3] = {};
 
 	Player* m_player = nullptr;//プレイヤー
 
@@ -58,7 +71,7 @@ private:
 
 	GameOver* m_gameOver = nullptr;//ゲームオーバー
 
-	Enemy2* m_enemy2 = nullptr;//ノコノコ枠
+	
 
 	AppearStage* m_appearStage = nullptr;//クリボーを三体倒すと現れるステージ
 
@@ -68,6 +81,7 @@ private:
 	//float m_LimitTime = 90.0f;//残り時間
 	float m_LimitTime = 30.0f;//残り時間
 
-	bool isEnd = false;
+	//GameOverかどうかを決めるフラグ
+	bool m_isEnd = false;
 };
 

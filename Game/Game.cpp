@@ -42,36 +42,56 @@ Game::Game()
 Game::~Game()
 {
 	//背景を削除
-	DeleteGO(m_backGround);
+	if (m_backGround != nullptr)
+	{
+		
+		DeleteGO(m_backGround);
+		m_backGround = nullptr;
+	}
 	//プレイヤーを削除
-	DeleteGO(m_player);
+	if (m_player != nullptr)
+	{
+		
+		DeleteGO(m_player);
+		m_player = nullptr;
+	}
+	
 	//ゲームカメラを削除
-	DeleteGO(m_gameCamera);
-	
-	if (m_enemy[0] != nullptr)
+	if (m_gameCamera != nullptr)
 	{
-		//エネミーを削除
-		DeleteGO(m_enemy[0]);
-		m_enemy[0] = nullptr;
+		
+		DeleteGO(m_gameCamera);
+		m_gameCamera = nullptr;
 	}
 	
-	if (m_enemy[1] != nullptr)
-	{
-		DeleteGO(m_enemy[1]);
-		m_enemy[1] = nullptr;
-	}
+
+	//これは C++ では配列名 = 配列の先頭アドレス
+	//しかし nullptr と比較しても絶対に true にも false にもならない
+    //つまり 常に true 扱い
+    //if (m_enemy != nullptr)  // ← 配列なので絶対に nullptr にならない！
+	//これは 無意味。
 	
-	if (m_enemy[2] != nullptr)
+
+	//エネミー１を削除
+	for (int i = 0; i < 3; i++)
 	{
-		DeleteGO(m_enemy[2]);
-		m_enemy[2] = nullptr;
+		if (m_enemy[i] != nullptr)
+		{
+			DeleteGO(m_enemy[i]);
+			m_enemy[i] = nullptr;
+		}
 	}
 
-	if (m_enemy2 != nullptr)
-	{
-		//エネミー２のモデル削除
-		DeleteGO(m_enemy2);
-		m_enemy2 = nullptr;
+	//エネミー２を削除
+	
+		for (int j = 0; j < 3; j++)
+		{
+			if (m_enemy2[j] != nullptr)
+			{
+				DeleteGO(m_enemy2[j]);
+				m_enemy2[j] = nullptr;
+			}
+
 	}
 	
 	if (m_timerImage != nullptr)
@@ -86,7 +106,7 @@ Game::~Game()
 		m_appearStage = nullptr;
 	}
 	
-;
+	
 	
 
 }
@@ -124,11 +144,9 @@ bool Game::Start()
 	
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
 
-	m_enemy2 = NewGO<Enemy2>(0, "enemy2");
-
 	m_timerImage = NewGO<TimerImage>(0, "timerimage");
 
-	//m_appearStage = NewGO<AppearStage>(0, "appearstage");
+
 	
 
 	//m_timerImage = NewGO<TimerImage>(0, "timerimage");
@@ -138,7 +156,7 @@ bool Game::Start()
 		m_enemy[1],
 		m_enemy[2],
 	};*/
-
+	//エネミー１をfor文で追加
 	for (int i = 0; i < 3; i++)
 	{
 		m_enemy[i] = NewGO<Enemy1>(0, "enemy1");
@@ -150,6 +168,19 @@ bool Game::Start()
 	m_enemy[2]->SetPosition(Vector3(-200.0f, 0.0f, 200.0f));
 		
 
+
+	//エネミー２をfor文で追加
+
+	for (int j = 0; j < 3; j++)
+	{
+		m_enemy2[j] = NewGO<Enemy2>(0, "enemy2");
+	}
+
+//エネミー２の初期座標を設定
+	m_enemy2[0]->SetPosition(Vector3(0.0f, 250.0f, 1000.0f));
+	m_enemy2[1]->SetPosition(Vector3(200.0f, 250.0f,1000.0f));
+	m_enemy2[2]->SetPosition(Vector3(-200.0f, 250.0f, 1000.0f));
+
 	return true;
 }
 
@@ -157,10 +188,9 @@ void Game::Update()
 {
 	TimerDraw();
 
-
+	//キルカウントが3以上ならステージを出現させる
 	if (m_killCount >= 3 && m_appearStage ==nullptr)
 	{
-		//m_appearStage = FindGO<AppearStage>("appearstage");
 	    m_appearStage = NewGO<AppearStage>(0, "appearstage");
 	}
 
@@ -180,6 +210,27 @@ void Game::Update()
 		m_BlackHeartRender[i].Update();
 	}
 
+	if (IsCreateBone == true)
+	{
+		m_BoneModelRender.Init("Assets/Stage/Bone.tkm");
+	}
+
+	//HPが0になったらゲームオーバーにする
+	if (m_player->m_HP <= 0)
+	{
+		if (m_gameOver == nullptr)
+		{
+			m_gameOver = NewGO<GameOver>(0, "gameover");
+		}
+		m_isEnd = true;
+	}
+
+	if (m_isEnd)
+	{
+		DeleteGO(this);
+		return;
+	}
+	
 }
 
 void Game::TimerDraw()
@@ -248,9 +299,9 @@ void Game::Render(RenderContext& rc)
 		}
 	}
 
-	if (m_Health <= 0)
+	/*if (m_Health <= 0)
 	{
 		m_gameOver = NewGO<GameOver>(0, "gameover");
 		DeleteGO(this);
-	}
+	}*/
 }
