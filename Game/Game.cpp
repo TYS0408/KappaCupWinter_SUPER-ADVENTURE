@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "Game.h"
 #include "Player.h"
 #include "BackGround.h"
@@ -11,69 +11,121 @@
 #include"AppearStage.h"
 #include"nature/SkyCube.h"
 #include"TimerImage.h"
-#include"graphics/RenderingEngine.h"
+#include"Display_Bone.h"
+#include"GoalPole.h"
+#include"sound/SoundSource.h"
+
 
 namespace
 {
 	const int hpPos = 3;
 
-	//Ô‚¢ƒn[ƒg‚ÌÀ•W
+	//èµ¤ã„ãƒãƒ¼ãƒˆã®åº§æ¨™
 	Vector3 m_RedHealthPos[hpPos] =
-	{
-		{-800.0f, 500.0f, 0.0f,},
-		{-720.0f, 500.0f, 0.0f},
-	    {-640.0f, 500.0f, 0.0f,}
-	};
-	//•‚¢ƒn[ƒg‚ÌÀ•W
-	Vector3 m_BlackHealthPos[hpPos] =
 	{
 		{-800.0f, 500.0f, 0.0f,},
 		{-720.0f, 500.0f, 0.0f},
 		{-640.0f, 500.0f, 0.0f,}
 	};
+	//é»’ã„ãƒãƒ¼ãƒˆã®åº§æ¨™
+	Vector3 m_BlackHealthPos[hpPos] =
+	{
+		{-800.0f, 500.0f, 0.0f},
+		{-720.0f, 500.0f, 0.0f},
+		{-640.0f, 500.0f, 0.0f}
+	};
+
+
+	const int bonePos = 6;
+	//éª¨ã®åº§æ¨™
+	Vector3 m_BonePos[bonePos] =
+	{
+		{-850.0f,-400.0f,0.0f},
+		{-750.0f,-400.0f,0.0f},
+		{-650.0f,-400.0f,0.0f},
+		{-550.0f,-400.0f,0.0f},
+		{-450.0f,-400.0f,0.0f},
+		{-350.0f,-400.0f, 0.0f} ,
+	};
+
+	Vector3 m_BlackBonePos[bonePos] =
+	{
+		{-850.0f,-400.0f,0.0f},
+		{-750.0f,-400.0f,0.0f},
+		{-650.0f,-400.0f,0.0f},
+		{-550.0f,-400.0f,0.0f},
+		{-450.0f,-400.0f,0.0f},
+		{-350.0f,-400.0f,0.0f},
+	};
+
 
 }
-Game::Game()
-{
-	
-}
+
 
 
 Game::~Game()
 {
-	//”wŒi‚ğíœ
+	if (m_player->m_HP <= 0 || m_LimitTime <= 0)
+	{
+		//DeleteGO(m_gameCamera);
+		//m_gameCamera = nullptr;
+
+		///*DeleteGO(m_player);
+		//m_player = nullptr;*/
+
+		DeleteGO(m_timerImage);
+		m_timerImage = nullptr;
+
+	}
+	//èƒŒæ™¯ã‚’å‰Šé™¤
 	if (m_backGround != nullptr)
 	{
-		
+
 		DeleteGO(m_backGround);
 		m_backGround = nullptr;
 	}
-	//ƒvƒŒƒCƒ„[‚ğíœ
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’å‰Šé™¤
 	if (m_player != nullptr)
 	{
-		
+
 		DeleteGO(m_player);
 		m_player = nullptr;
 	}
+
 	
-	//ƒQ[ƒ€ƒJƒƒ‰‚ğíœ
+
+	if (gameBGM != nullptr)
+	{
+		DeleteGO(gameBGM);
+		gameBGM = nullptr;
+    }
+	
+
+	if (m_goalpole)
+	{
+		DeleteGO(m_goalpole);
+		m_goalpole = nullptr;
+	}
+	//ã‚²ãƒ¼ãƒ ã‚«ãƒ¡ãƒ©ã‚’å‰Šé™¤
 	if (m_gameCamera != nullptr)
 	{
-		
+
 		DeleteGO(m_gameCamera);
 		m_gameCamera = nullptr;
 	}
+
+
+	//ã“ã‚Œã¯ C++ ã§ã¯é…åˆ—å = é…åˆ—ã®å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹
+	//ã—ã‹ã— nullptr ã¨æ¯”è¼ƒã—ã¦ã‚‚çµ¶å¯¾ã« true ã«ã‚‚ false ã«ã‚‚ãªã‚‰ãªã„
+	//ã¤ã¾ã‚Š å¸¸ã« true æ‰±ã„
+	//if (m_enemy != nullptr)  // â† é…åˆ—ãªã®ã§çµ¶å¯¾ã« nullptr ã«ãªã‚‰ãªã„ï¼
+	//ã“ã‚Œã¯ ç„¡æ„å‘³ã€‚
+
+
 	
 
-	//‚±‚ê‚Í C++ ‚Å‚Í”z—ñ–¼ = ”z—ñ‚Ìæ“ªƒAƒhƒŒƒX
-	//‚µ‚©‚µ nullptr ‚Æ”äŠr‚µ‚Ä‚àâ‘Î‚É true ‚É‚à false ‚É‚à‚È‚ç‚È‚¢
-    //‚Â‚Ü‚è í‚É true ˆµ‚¢
-    //if (m_enemy != nullptr)  // © ”z—ñ‚È‚Ì‚Åâ‘Î‚É nullptr ‚É‚È‚ç‚È‚¢I
-	//‚±‚ê‚Í –³ˆÓ–¡B
-	
-
-	//ƒGƒlƒ~[‚P‚ğíœ
-	for (int i = 0; i < 3; i++)
+	//ã‚¨ãƒãƒŸãƒ¼ï¼‘ã‚’å‰Šé™¤
+	for (int i = 0; i < 6; i++)
 	{
 		if (m_enemy[i] != nullptr)
 		{
@@ -82,57 +134,78 @@ Game::~Game()
 		}
 	}
 
-	//ƒGƒlƒ~[‚Q‚ğíœ
-	
-		for (int j = 0; j < 3; j++)
+	//ã‚¨ãƒãƒŸãƒ¼ï¼’ã‚’å‰Šé™¤
+
+	for (int j = 0; j < 6; j++)
+	{
+		if (m_enemy2[j] != nullptr)
 		{
-			if (m_enemy2[j] != nullptr)
-			{
-				DeleteGO(m_enemy2[j]);
-				m_enemy2[j] = nullptr;
-			}
+			DeleteGO(m_enemy2[j]);
+			m_enemy2[j] = nullptr;
+		}
 
 	}
+
 	
-	if (m_timerImage != nullptr)
-	{
-		DeleteGO(m_timerImage);
-		m_timerImage = nullptr;
-    }
 
 	if (m_appearStage != nullptr)
 	{
 		DeleteGO(m_appearStage);
 		m_appearStage = nullptr;
 	}
-	
-	
-	
 
+	for (auto h : m_bones)
+	{
+		if (h)
+		{
+			DeleteGO(h);
+		}
+	}
+	//std::vector<Bone_Obj> m_bones;* ã®//ä¸­èº«ã‚’ã™ã¹ã¦æ¶ˆã—ã¦,ã€Œç©ºã®é…åˆ—ã€ã«æˆ»ã™ãŸã‚ã®å‡¦ç†
+	m_bones.clear();
+	
 }
 
 
 bool Game::Start()
 {
-	////ƒ|ƒCƒ“ƒgƒ‰ƒCƒg‚ğì¬
+	////ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆã‚’ä½œæˆ
 	//auto* pointLight = g_sceneLight->NewPointLight();
 	//pointLight->SetPosition(Vector3(5.0f, 55.0f, 0.0f));
 	//pointLight->SetColor(0.1f, 0.1f, 10.0f);
 	//pointLight->SetRange(100.0f);
 	//pointLight->SetAffectPowParam(1.0f);
 	//pointLight->Update();
+	
+	//ã‚²ãƒ¼ãƒ ã®BGMã‚’èª­ã¿è¾¼ã‚€
+	g_soundEngine->ResistWaveFileBank(0, "Assets/BGMãƒ»SE/GameBGM.wav");
 
+	//BGMã®å†ç”Ÿ
+	gameBGM = NewGO<SoundSource>(0,"soundsource");
+	gameBGM->Init(0);
+	gameBGM->Play(true);
 
 
 	
+	m_gameClear = FindGO<GameClear>("gameclear");
 
-	//HP‚ÌUI‚ğfor•¶‚Å’Ç‰Á
+	m_goalpole = FindGO<GoalPole>("goalpole");
+
+	//HPã®UIã‚’foræ–‡ã§è¿½åŠ 
 	for (int i = 0; i < 3; i++)
 	{
 
 		m_RedHeartRender[i].Init("Assets/Sprite/Heart.dds", 100.0f, 100.0f);
 		m_BlackHeartRender[i].Init("Assets/Sprite/BlackHeart3.dds", 100.0f, 100.0f);
 
+	}
+
+
+	//éª¨ã®UIã‚’foræ–‡ã§è¿½åŠ 
+	for (int i = 0; i < 6; i++)
+	{
+		m_BoneRender[i].Init("Assets/Sprite/Bone.dds", 300.0f, 300.0f);
+		m_BlackBoneRender[i].Init("Assets/Sprite/BlackBone.dds", 300.0f, 300.0f);
 	}
 	
 
@@ -141,57 +214,93 @@ bool Game::Start()
 	m_player = NewGO<Player>(0, "player");
 
 	m_backGround = NewGO<BackGround>(0, "backGround");
-	
+
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
 
 	m_timerImage = NewGO<TimerImage>(0, "timerimage");
 
-
-	
-
-	//m_timerImage = NewGO<TimerImage>(0, "timerimage");
-	//‚±‚ê‚Ím_enemy‚ğm_enemy©g‚Ì’l‚Å‰Šú‰»‚µ‚æ‚¤‚Æ‚µ‚Ä‚¢‚é
+	//m_goalpole = NewGO<GoalPole>(0, "goalpole");
+	//ã“ã‚Œã¯m_enemyã‚’m_enemyè‡ªèº«ã®å€¤ã§åˆæœŸåŒ–ã—ã‚ˆã†ã¨ã—ã¦ã„ã‚‹
 	/*{
 		m_enemy[0],
 		m_enemy[1],
 		m_enemy[2],
 	};*/
-	//ƒGƒlƒ~[‚P‚ğfor•¶‚Å’Ç‰Á
-	for (int i = 0; i < 3; i++)
+	//ã‚¨ãƒãƒŸãƒ¼ï¼‘ã‚’foræ–‡ã§è¿½åŠ 
+	for (int i = 0; i < 6; i++)
 	{
 		m_enemy[i] = NewGO<Enemy1>(0, "enemy1");
 	}
 
-	//ƒGƒlƒ~[‚Ì‰ŠúˆÊ’u‚ğİ’è‚·‚é
+	//ã‚¨ãƒãƒŸãƒ¼ã®åˆæœŸä½ç½®ã‚’è¨­å®šã™ã‚‹
 	m_enemy[0]->SetPosition(Vector3(0.0f, 0.0f, 500.0f));
 	m_enemy[1]->SetPosition(Vector3(200.0f, 0.0f, 400.0f));
 	m_enemy[2]->SetPosition(Vector3(-200.0f, 0.0f, 200.0f));
-		
+	m_enemy[3]->SetPosition(Vector3(-500.0f, 550.0f, 2000.0f));
+	m_enemy[4]->SetPosition(Vector3(-900.0f, 550.0f, 2000.0f));
+	m_enemy[5]->SetPosition(Vector3(700.0f, 550.0f, 2000.0f));
 
 
-	//ƒGƒlƒ~[‚Q‚ğfor•¶‚Å’Ç‰Á
+	//ã‚¨ãƒãƒŸãƒ¼ï¼’ã‚’foræ–‡ã§è¿½åŠ 
 
-	for (int j = 0; j < 3; j++)
+	for (int j = 0; j < 6; j++)
 	{
 		m_enemy2[j] = NewGO<Enemy2>(0, "enemy2");
 	}
+	//ã‚¨ãƒãƒŸãƒ¼ï¼’ã®åˆæœŸåº§æ¨™ã‚’è¨­å®š
+	m_enemy2[0]->SetPosition(Vector3(0.0f, 330.0f, 1000.0f));
+	m_enemy2[1]->SetPosition(Vector3(200.0f, 330.0f, 1000.0f));
+	m_enemy2[2]->SetPosition(Vector3(-200.0f, 330.0f, 1000.0f));
+	m_enemy2[3]->SetPosition(Vector3(-700.0f, 550.0f, 2000.0f));
+	m_enemy2[4]->SetPosition(Vector3(500.0f, 550.0f, 2000.0f));
+	m_enemy2[5]->SetPosition(Vector3(900.0f, 550.0f, 2000.0f));
 
-//ƒGƒlƒ~[‚Q‚Ì‰ŠúÀ•W‚ğİ’è
-	m_enemy2[0]->SetPosition(Vector3(0.0f, 250.0f, 1000.0f));
-	m_enemy2[1]->SetPosition(Vector3(200.0f, 250.0f,1000.0f));
-	m_enemy2[2]->SetPosition(Vector3(-200.0f, 250.0f, 1000.0f));
-
+	m_displayBone = nullptr;
 	return true;
 }
+
 
 void Game::Update()
 {
 	TimerDraw();
-
-	//ƒLƒ‹ƒJƒEƒ“ƒg‚ª3ˆÈã‚È‚çƒXƒe[ƒW‚ğoŒ»‚³‚¹‚é
-	if (m_killCount >= 3 && m_appearStage ==nullptr)
+	
+	if (!m_isEnd)
 	{
-	    m_appearStage = NewGO<AppearStage>(0, "appearstage");
+		HPDraw();
+	}
+	
+
+	//BoneDraw();
+	//å¾Œã§æ¤œç´¢
+	for (int i = 0; i < m_bones.size(); )
+	{
+		Display_Bone* bone = m_bones[i];
+
+		// æ­»ã‚“ã éª¨ã¯å‰Šé™¤
+		if (bone == nullptr || bone->IsDead())
+		{
+			DeleteGO(bone);
+			m_bones.erase(m_bones.begin() + i);
+			//ã“ã“ã§continueã™ã‚‹ã“ã¨ã§ä¸‹ã®å‡¦ç†ã‚’é£›ã°ã—ã¦ã„ã‚‹
+			continue;
+		}
+
+		 //ç”Ÿãã¦ã„ã‚‹éª¨ã ã‘æ›´æ–°
+		bone->Update();
+		i++;
+	}
+
+
+	
+	//ã‚­ãƒ«ã‚«ã‚¦ãƒ³ãƒˆãŒ3ä»¥ä¸Šãªã‚‰ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’å‡ºç¾ã•ã›ã‚‹
+	if (m_killCount >= 3 && m_appearStage == nullptr)
+	{
+		m_appearStage = NewGO<AppearStage>(0, "appearstage");
+	}
+
+	if (m_killCount >= 12 && m_goalpole == nullptr)
+	{
+		m_goalpole = NewGO<GoalPole>(0, "goalpole");
 	}
 
 	for (int i = 0; i < 3; i++)
@@ -201,93 +310,237 @@ void Game::Update()
 		m_RedHeartRender[i].Update();
 	}
 
-	
+
 
 	for (int i = 0; i < 3; i++)
 	{
 		m_BlackHeartRender[i].SetPosition(m_BlackHealthPos[i]);
-	
 		m_BlackHeartRender[i].Update();
 	}
 
-	if (IsCreateBone == true)
+
+
+	for (int i = 0; i < 6; i++)
 	{
-		m_BoneModelRender.Init("Assets/Stage/Bone.tkm");
+		m_BoneRender[i].SetPosition(m_BonePos[i]);
+		m_BoneRender[i].Update();
 	}
 
-	//HP‚ª0‚É‚È‚Á‚½‚çƒQ[ƒ€ƒI[ƒo[‚É‚·‚é
-	if (m_player->m_HP <= 0)
+	for (int i = 0; i < 6; i++)
+	{
+		m_BlackBoneRender[i].SetPosition(m_BlackBonePos[i]);
+		m_BlackBoneRender[i].Update();
+	}
+
+
+	//HPãŒ0ã«ãªã£ãŸã‚‰ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼ã«ã™ã‚‹
+	if (m_player->m_HP <= 0||m_LimitTime<=0)
 	{
 		if (m_gameOver == nullptr)
 		{
+			// BGMåœæ­¢
+			if (gameBGM)
+			{
+				gameBGM->Stop();
+			}
 			m_gameOver = NewGO<GameOver>(0, "gameover");
 		}
 		m_isEnd = true;
-	}
-
-	if (m_isEnd)
-	{
-		DeleteGO(this);
 		return;
 	}
-	
-}
+
+
+
+
+
+	/*if (m_goalpole && m_goalpole->m_isGoal)
+	{
+		if (m_gameClear == nullptr)
+		{
+			m_gameClear = NewGO<GameClear>(0, "gameclear");
+		}
+
+		DeleteGO(m_goalpole);
+		m_goalpole = nullptr;
+
+		m_isEnd = true;
+		return;
+	}*/
+		
+	}
 
 void Game::TimerDraw()
 {
 
-	//c‚èŠÔ‚ÌƒeƒLƒXƒg
+	//æ®‹ã‚Šæ™‚é–“ã®ãƒ†ã‚­ã‚¹ãƒˆ
 	int seconds = (int)m_LimitTime;
 	m_LimitTime -= g_gameTime->GetFrameDeltaTime();
 	wchar_t timerText[256];
 	swprintf_s(timerText, 256, L"%03d", seconds);
 
 	timerFontRender.SetText(timerText);
-	//À•W
+	//åº§æ¨™
 	timerFontRender.SetPosition({ 800.0f,530.0f,0.0f });
-	//•¶š‚Ì‘å‚«‚³
+	//æ–‡å­—ã®å¤§ãã•
 	timerFontRender.SetScale(2.0f);
-	//•¶š‚ÌF
+	//æ–‡å­—ã®è‰²
 	timerFontRender.SetColor(g_vec4White);
 
-	if (m_LimitTime <= 0.0f)
+	/*if (m_LimitTime <= 0.0f)
 	{
 		m_gameOver = NewGO<GameOver>(0, "gameover");
-		DeleteGO(this);
+		m_isEnd = true;
 
-	}
+	}*/
 }
 
 
 
+void Game::HPDraw()
+{
+	hpFontRender.SetText(L"HP");
+	//åº§æ¨™
+	hpFontRender.SetPosition({ -950.0f,540.0f,0.0f });
+	//æ–‡å­—ã®å¤§ãã•
+	hpFontRender.SetScale(2.0f);
+	//æ–‡å­—ã®è‰²
+	hpFontRender.SetColor(g_vec4White);
+}
+
+
+void Game::OnGoal()
+{
+	if (m_goalpole && m_goalpole->m_isGoal)
+	{
+		if (m_gameClear == nullptr)
+		{
+			m_gameClear = NewGO<GameClear>(0, "gameclear");
+			DeleteGO(m_goalpole);
+			m_goalpole = nullptr;
+
+			// BGMåœæ­¢
+			if (gameBGM)
+			{
+				gameBGM->Stop();
+			}
+		}
+	}
+	m_isEnd = true;
+}
+
+
+
+//ã€Œæ•µãŒå€’ã‚ŒãŸä½ç½®ã«éª¨ã‚’ç”Ÿæˆã—ã¦ã€å¾Œã§ã¾ã¨ã‚ã¦ç®¡ç†ã§ãã‚‹ã‚ˆã†ã«ã™ã‚‹å‡¦ç†ã€
+void Game::OnDeleteBone(const Vector3& pos)//â†ã“ã®posã¯éª¨ã‚’ç”Ÿæˆã™ã‚‹ä½ç½®
+{
+	/*m_deathCount -= g_gameTime->GetFrameDeltaTime();
+
+	if (m_deathCount <= 0.0f)
+	{*/
+		Display_Bone* bone = NewGO<Display_Bone>(0, "display_bone");
+
+		//æ•µã‚’å€’ã—ãŸå ´æ‰€ã«éª¨ã‚’ç”Ÿæˆã™ã‚‹
+		bone->SetPosition(pos);
+
+		//ç”Ÿæˆã—ãŸéª¨ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ bone ã‚’ éª¨ã®ãƒªã‚¹ãƒˆ m_bones ã«è¿½åŠ ã€ã“ã‚Œã«ã‚ˆã‚Šå¾Œã§ã¾ã¨ã‚ã¦å‰Šé™¤ã—ãŸã‚Šã€ç®¡ç†ã—ãŸã‚Šã™ã‚‹ã“ã¨ãŒã§ãã‚‹ã€‚
+		m_bones.push_back(bone);
+	//}
+
+	
+}
+
+
+void Game::UnregisterEnemy1(Enemy1* enemy)
+{
+	for (int i = 0; i < 6; i++)
+	{
+		if (m_enemy[i] == enemy)
+		{
+
+			m_enemy[i] = nullptr;
+			return;
+	     }
+
+	}
+
+}
+
+
+void Game::UnregisterEnemy2(Enemy2* enemy2)
+{
+	for (int i = 0; i < 6; i++)
+	{
+		if (m_enemy2[i] == enemy2)
+		{
+			m_enemy2[i] = nullptr;
+			return;
+		}
+	}
+}
+
+
+//å¾Œã§æ¤œç´¢
+ std::vector<IGameObject*>Game::GetEnemylist()
+{
+	std::vector<IGameObject*>list;
+
+	for (int i = 0; i < 6; i++)
+	{
+		if (m_enemy[i] && !m_enemy[i]->IsDead)
+		{
+			list.push_back(m_enemy[i]);
+		}
+	}
+
+
+
+	for (int i = 0; i < 6; i++)
+	{
+		if (m_enemy2[i] && !m_enemy2[i]->IsDead)
+		{
+			list.push_back(m_enemy2[i]);
+		}
+	}
+	return list;
+}
+
+
+
+void Game::OnGetBone()
+{
+	//å–å¾—ã—ãŸéª¨ã®æ•°ã‚’å¢—ã‚„ã™
+	m_haveBoneCount++;
+}
 void Game::InitSky()
 {
 	DeleteGO(m_skycube);
 	m_skycube = NewGO<SkyCube>(0, "skycube");
-	m_skycube->SetLuminance(1.0f);//–¾‚é‚³İ’è
-	m_skycube->SetType((EnSkyCubeType)m_SkyCubeType);//ƒXƒJƒCƒLƒ…[ƒu‚Ìƒ^ƒCƒvİ’è
+	m_skycube->SetLuminance(1.0f);//æ˜ã‚‹ã•è¨­å®š
+	m_skycube->SetType((EnSkyCubeType)m_SkyCubeType);//ã‚¹ã‚«ã‚¤ã‚­ãƒ¥ãƒ¼ãƒ–ã®ã‚¿ã‚¤ãƒ—è¨­å®š
 	g_renderingEngine->SetAmbientByIBLTexture(m_skycube->GetTextureFilePath(), 1.0f);
-	//ŠÂ‹«Œõ‚ÌŒvZ‚Ì‚½‚ß‚ÌIBLƒeƒNƒXƒ`ƒƒ‚ğƒZƒbƒg
+	//ç’°å¢ƒå…‰ã®è¨ˆç®—ã®ãŸã‚ã®IBLãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ã‚»ãƒƒãƒˆ
 	g_renderingEngine->SetDirectionLight(0, g_vec3Zero, g_vec3Zero);
 }
 
 void Game::Render(RenderContext& rc)
 {
 	timerFontRender.Draw(rc);
-    int m_Health = m_player->m_HP;
 
-	
+	hpFontRender.Draw(rc);
 
-	
+	//boneFontRender.Draw(rc);
+
+	int m_Health = m_player->m_HP;
+
 	for (int i = 0; i < 3; i++)
-	{ 
-		//(—á)/*m_Health = 2 ‚Ì‚Æ‚«
-		//i = 0 ¨ Ô
-		//i = 1 ¨ Ô
-		//i = 2 ¨ •
-		//i = 0@¨ 0 < 2@¨Ôƒn[ƒg‚ğo‚·
-		// i = 1¨ 1 <  2@¨Ôƒn[ƒg‚ğo‚· 
-		//i = 2 ¨2 < 2 ¨false¨•ƒn[ƒg‚ğo‚·
+	{
+		//(ä¾‹)/*m_Health = 2 ã®ã¨ã
+		//i = 0 â†’ èµ¤
+		//i = 1 â†’ èµ¤
+		//i = 2 â†’ é»’
+		//i = 0ã€€â†’ 0 < 2ã€€â†’èµ¤ãƒãƒ¼ãƒˆã‚’å‡ºã™
+		// i = 1â†’ 1 <  2ã€€â†’èµ¤ãƒãƒ¼ãƒˆã‚’å‡ºã™ 
+		//i = 2 â†’2 < 2 â†’falseâ†’é»’ãƒãƒ¼ãƒˆã‚’å‡ºã™
 		if (i < m_Health)
 		{
 			m_RedHeartRender[i].Draw(rc);
@@ -299,9 +552,23 @@ void Game::Render(RenderContext& rc)
 		}
 	}
 
-	/*if (m_Health <= 0)
+	int m_BoneCount = m_haveBoneCount;
+
+	for (int i = 0; i < 6; i++)
 	{
-		m_gameOver = NewGO<GameOver>(0, "gameover");
-		DeleteGO(this);
-	}*/
+		if (i < m_BoneCount)
+		{
+			//æ‰€æŒã—ã¦ã„ã‚‹éª¨ã ã‘æç”»
+			m_BoneRender[i].Draw(rc);
+		}
+
+		else
+		{
+			//æŒã£ã¦ã„ãªã„ã¨ã“ã‚ã¯é»’ã„éª¨
+			m_BlackBoneRender[i].Draw(rc);
+		}
+	}
+	
+
+	
 }

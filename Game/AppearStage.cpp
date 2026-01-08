@@ -14,8 +14,8 @@ AppearStage::~AppearStage()
 
 bool AppearStage::Start()
 {
-
-	m_position = Vector3(0.0f, 3.0f, 350.0f);
+	//èâä˙íl
+	m_position = Vector3(0.0f, -50.0f, 440.0f);
 	m_modelRender.SetPosition(m_position);
 	m_modelRender.Init("Assets/Stage/Kill_Stage.tkm");
 	m_physicsStaticObject.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());

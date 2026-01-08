@@ -22,6 +22,12 @@
     <ClCompile Include="Enemy2.cpp" />
     <ClCompile Include="AppearStage.cpp" />
     <ClCompile Include="TimerImage.cpp" />
+    <ClCompile Include="Display_Bone.cpp" />
+    <ClCompile Include="GoalPole.cpp" />
+    <ClCompile Include="BossStage.cpp" />
+    <ClCompile Include="Enemy3.cpp" />
+    <ClCompile Include="BossClear.cpp" />
+    <ClCompile Include="BossGameOver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -39,5 +45,11 @@
     <ClInclude Include="Enemy2.h" />
     <ClInclude Include="AppearStage.h" />
     <ClInclude Include="TimerImage.h" />
+    <ClInclude Include="Display_Bone.h" />
+    <ClInclude Include="GoalPole.h" />
+    <ClInclude Include="BossStage.h" />
+    <ClInclude Include="Enemy3.h" />
+    <ClInclude Include="BossClear.h" />
+    <ClInclude Include="BossGameOver.h" />
   </ItemGroup>
 </Project>

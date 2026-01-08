@@ -1,22 +1,21 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "BackGround.h"
 
 
 namespace
 {
-	Vector3 SCALE = Vector3(3.0f, 3.0f, 3.0f);
+	Vector3 SCALE = Vector3(3.0f, 4.0f, 3.0f);
 }
 BackGround::BackGround()
 {
 	
-    //‰ŠúƒŠƒX
-	m_modelRender.Init("Assets/Stage/Stage_First.tkm");
+    //åˆæœŸãƒªã‚¹
+	m_modelRender.Init("Assets/Stage/Stage.tkm");
 	m_modelRender.SetScale(SCALE);
 	m_modelRender.Update();
 	m_physicsStaticObject.CreateFromModel(m_modelRender.GetModel(), m_modelRender.GetModel().GetWorldMatrix());
 
-
-	//“–‚½‚è”»’è•`‰æ
+	//å½“ãŸã‚Šåˆ¤å®šæç”»
 	//PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 }
 

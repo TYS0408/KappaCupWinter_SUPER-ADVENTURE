@@ -1,5 +1,7 @@
-#pragma once
+ï»¿#pragma once
 #include "Level3DRender/LevelRender.h"
+#include"Display_Bone.h"
+#include"sound/SoundSource.h"
 class Player;
 class Enemy1;
 class BackGround;
@@ -8,10 +10,15 @@ class GameOver;
 class Enemy2;
 class AppearStage;
 class TimerImage;
+class Display_Bone;
+class GoalPole;
+class GameClear;
 class Game : public IGameObject
 {
 public:
-	Game();
+
+	
+	Game() {};
 	~Game();
 	bool Start();
 
@@ -19,69 +26,103 @@ public:
 
 	void InitSky();
 
-	void TimerDraw();//ƒ^ƒCƒ}[‚Ì•\¦
+	void TimerDraw();//ã‚¿ã‚¤ãƒãƒ¼ã®è¡¨ç¤º
 
+	void HPDraw();//HPè¡¨ç¤º
+
+	//void ResetGameStatus();
+
+void OnGoal();//ã‚´ãƒ¼ãƒ«é€šçŸ¥
+
+	void UnregisterEnemy1(Enemy1* enemy1);
+	void UnregisterEnemy2(Enemy2* enemy2);
 	void Render(RenderContext& rc);
 
-	//“G‚ğ“|‚µ‚½‚Æ‚«‚ÉƒXƒe[ƒW‚ğo‚·‚½‚ß‚Ì•Ï”
+	
+//æ•µãŒéª¨ã«åˆ‡ã‚Šæ›¿ã‚ã‚‹å‡¦ç†
+	void OnDeleteBone(const Vector3 & pos);
+	
+	void OnGetBone();
+
+	//æ•µã‚’å€’ã—ãŸã¨ãã«ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’å‡ºã™ãŸã‚ã®å¤‰æ•°
 	int m_killCount = 0;
 
-	bool IsCreateBone = false;//“G‚ğ“|‚µ‚½‚Æ‚«‚Éœ‚ÉØ‚è‘Ö‚¦‚éƒtƒ‰ƒO
+	int m_haveBoneCount = 0;//æ‰€æŒã—ã¦ã„ã‚‹éª¨ã®æ•°
+
+	float m_deathCount = 2.0;//æ•µã‚’å€’ã—ãŸã¨ãã«éª¨ã‚’ç§’æ•°
+
+	bool IsCreateBone = false;//ãƒã‚³ãƒã‚³ã‚’å€’ã—ãŸæ™‚ã«éª¨ã«åˆ‡ã‚Šæ›¿ãˆã‚‹ãƒ•ãƒ©ã‚°
+
+	bool IsDelete = false;//å‰Šé™¤å‡¦ç†
+	
+	bool isGameClear = false;
+
+	float m_LimitTime = 60.0f;//æ®‹ã‚Šæ™‚é–“
+	//static constexpr float LIMIIT_TIME_MAX = 90.0f;
+	//float m_LimitTime = 30.0f;//æ®‹ã‚Šæ™‚é–“
+
+	std::vector<IGameObject* >GetEnemylist() ;//éª¨ã«å½“ãŸã‚‹ã“ã¨ãŒã§ãã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+
 private:
-	//ƒGƒlƒ~[1‚Ì”z—ñ
-	/*Vector3 m_pos[3] =
-	{
-		{0.0f,0.0f,400.0f,},
-	   {200.0f,0.0f,400.0f},
-		{-200.0f,0.0f,400.0f},
-	};
 
-	Vector3 m_pos2[3] =
-	{
-		{0.0f,250.0f,1000.0f},
-		{200.0f,250.0f,1000.0f},
-		{-200.0f,250.0f,1000.0f},
-	};*/
-
-	ModelRender m_modelRender;
-
-	ModelRender m_BoneModelRender;//œ—p‚Ìƒ‚ƒfƒ‹ƒŒƒ“ƒ_[
-
-	FontRender timerFontRender;//ŠÔ•\¦
-
-	SpriteRender m_RedHeartRender[3];//Ô‚¢ƒn[ƒg
-
-	SpriteRender m_BlackHeartRender[3];//•‚¢ƒn[ƒg
-
-	//“G‚Ì”z—ñ
-	//‘S‚Änullptr‚Å‰Šú‰»‚µ‚Ä‚¢‚é
-	Enemy1* m_enemy[3] = {};
-
-	Enemy2* m_enemy2[3] = {};
-
-	Player* m_player = nullptr;//ƒvƒŒƒCƒ„[
-
-	BackGround* m_backGround = nullptr;//ƒoƒbƒNƒOƒ‰ƒ“ƒh
-
-	GameCamera* m_gameCamera = nullptr;//ƒQ[ƒ€ƒJƒƒ‰
-
-	SkyCube* m_skycube = nullptr;//ƒXƒJƒCƒLƒ…[ƒu
-
-	Game* game = nullptr;//ƒQ[ƒ€
-
-	GameOver* m_gameOver = nullptr;//ƒQ[ƒ€ƒI[ƒo[
+	//å¾Œã§æ¤œç´¢ã—ã¦ãŠã
+	std::vector<Display_Bone*>m_bones;//å˜æ•°ã‹ã‚‰è¤‡æ•°ã¸(éª¨ã®ç®¡ç†ç”¨)
 
 	
 
-	AppearStage* m_appearStage = nullptr;//ƒNƒŠƒ{[‚ğO‘Ì“|‚·‚ÆŒ»‚ê‚éƒXƒe[ƒW
+	ModelRender m_modelRender;//ãƒ¢ãƒ‡ãƒ«ãƒ¬ãƒ³ãƒ€ãƒ¼
 
-	TimerImage* m_timerImage = nullptr;
+	FontRender timerFontRender;//æ™‚é–“è¡¨ç¤º
+
+	FontRender hpFontRender;//HPè¡¨ç¤º
+
+	FontRender boneFontRender;//éª¨ã®è¡¨ç¤º
+
+	SpriteRender m_RedHeartRender[3];//èµ¤ã„ãƒãƒ¼ãƒˆ
+
+	SpriteRender m_BlackHeartRender[3];//é»’ã„ãƒãƒ¼ãƒˆ
+
+	SpriteRender m_BoneRender[6];//éª¨
+
+	SpriteRender m_BlackBoneRender[6];//é»’ã„éª¨
+	
+
+	//æ•µã®é…åˆ—
+	//å…¨ã¦nullptrã§åˆæœŸåŒ–ã—ã¦ã„ã‚‹
+	Enemy1* m_enemy[6] = {};
+
+	Enemy2* m_enemy2[6] = {};
+
+	Player* m_player = nullptr;//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
+
+	BackGround* m_backGround = nullptr;//ãƒãƒƒã‚¯ã‚°ãƒ©ãƒ³ãƒ‰
+
+	GameCamera* m_gameCamera = nullptr;//ã‚²ãƒ¼ãƒ ã‚«ãƒ¡ãƒ©
+
+	SkyCube* m_skycube = nullptr;//ã‚¹ã‚«ã‚¤ã‚­ãƒ¥ãƒ¼ãƒ–
+
+	Game* game = nullptr;//ã‚²ãƒ¼ãƒ 
+
+	GameOver* m_gameOver = nullptr;//ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼
+
+	GameClear* m_gameClear = nullptr;
+
+	AppearStage* m_appearStage = nullptr;//ã‚¯ãƒªãƒœãƒ¼ã‚’ä¸‰ä½“å€’ã™ã¨ç¾ã‚Œã‚‹ã‚¹ãƒ†ãƒ¼ã‚¸
+
+	TimerImage* m_timerImage = nullptr;//æ™‚è¨ˆã®UI
+
+	Display_Bone* m_displayBone = nullptr;//éª¨ã‚’å‡ºã™ãŸã‚ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
+
+	GoalPole* m_goalpole = nullptr;
+
+
+	SoundSource* gameBGM = nullptr;
 	int m_SkyCubeType = enSkyCubeType_NightToon_2;
 
-	//float m_LimitTime = 90.0f;//c‚èŠÔ
-	float m_LimitTime = 30.0f;//c‚èŠÔ
+	
 
-	//GameOver‚©‚Ç‚¤‚©‚ğŒˆ‚ß‚éƒtƒ‰ƒO
+	//GameOverã‹ã©ã†ã‹ã‚’æ±ºã‚ã‚‹ãƒ•ãƒ©ã‚°
 	bool m_isEnd = false;
-};
+	bool isClear = false;
 
+};

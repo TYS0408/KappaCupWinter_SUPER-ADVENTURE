@@ -22,9 +22,6 @@ bool TimerImage::Start()
 
 void TimerImage::Update()
 {
-
-
-
 	m_spriteRender.Update();
 }
 

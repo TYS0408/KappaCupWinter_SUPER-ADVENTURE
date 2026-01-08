@@ -1,5 +1,7 @@
-#pragma once
+ï»¿#pragma once
 class GameOver;
+class Game;
+class GoalPole;
 class Player : public IGameObject
 {
 public:
@@ -13,12 +15,16 @@ public:
 
 	void Rotation();
 
+
 	void Render(RenderContext& rc);
 
 	void ManageState();
 
 	void PlayAnimation();
 
+	//void ResetStatus();
+
+	void ThrowBone();//å–å¾—ã—ãŸéª¨ã‚’æŠ•ã’ã‚‹å‡¦ç†
 	const Vector3& GetPos()
 	{
 		return m_position;
@@ -27,43 +33,59 @@ public:
 	{
 		m_position = pos;
 	}
+	//å¾Œã§æ¤œç´¢
+	Vector3 m_forward = Vector3::AxisZ;
 
+	Vector3 m_moveSpeed;
 	CharacterController& GetCharacterController()
 	{
 		return m_characterController;
 	}
 
-	int m_HP = 3;//ƒvƒŒƒCƒ„[‚Ì‘Ì—Í
-	Vector3 m_position;//À•W
+	int m_HP = 3;//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ä½“åŠ›
 
-	bool InvincibleJuge = false;//–³“G‚©–³“G‚¶‚á‚È‚¢‚©‚Ìƒtƒ‰ƒO
+	static constexpr int Max_HP = 3;
+	Vector3 m_position;//åº§æ¨™
 
-	float InvincibleTime = 3.0f;//–³“GŠÔ
+	bool InvincibleJuge = false;//ç„¡æ•µã‹ç„¡æ•µã˜ã‚ƒãªã„ã‹ã®ãƒ•ãƒ©ã‚°
 
-    
-	Vector3 m_moveSpeed = Vector3::Zero;//ˆÚ“®ˆ—
+	bool Shot = false;//ç™ºå°„ãƒ•ãƒ©ã‚°
+	
+	float InvincibleTime = 3.0f;//ç„¡æ•µæ™‚é–“
 
+	//ãƒãƒƒã‚¯ãƒãƒƒã‚¯å‡¦ç†
+	bool m_isKnockBack = false;
+	float m_knockBackTime = 0.0f;
 private:
-	//ƒƒ“ƒoŠÖ”
+	//ãƒ¡ãƒ³ãƒé–¢æ•°
 	ModelRender m_modelRender;
 
 	
-	Vector3 m_respawn;//ƒŠƒXƒ|[ƒ“
+	Vector3 m_respawn;//ãƒªã‚¹ãƒãƒ¼ãƒ³
 
-	Quaternion m_rot;//‰ñ“]ˆ—
+	Quaternion m_rot;//å›è»¢å‡¦ç†
 
-	CharacterController m_characterController;//“–‚½‚è”»’è
+	CharacterController m_characterController;//å½“ãŸã‚Šåˆ¤å®š
 
 	GameOver* m_gameover = nullptr;
 
+	Game* m_game = nullptr;
 
-	bool IsDead = false;//€–Sƒtƒ‰ƒO
+	GoalPole* m_goalPole = nullptr;
+
+	bool IsDead = false;//æ­»äº¡ãƒ•ãƒ©ã‚°
+
+	int m_playerState = 0;//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¹ãƒ†ãƒ¼ãƒˆ
+	
+
+	//ç‚¹æ»…ç”¨
+	float m_blinkTimer = 0.0f;
+	float m_blinkInterval = 0.1f;//ç‚¹æ»…é–“éš”
+	bool m_isVisible = true;
 
 	
-	int m_playerState = 0;//ƒvƒŒƒCƒ„[ƒXƒe[ƒg
-	
 
-	//ƒAƒjƒ[ƒVƒ‡ƒ“
+	//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³
 	enum EnPlayAnimation
 	{
 		enAnimationClip_Idle,

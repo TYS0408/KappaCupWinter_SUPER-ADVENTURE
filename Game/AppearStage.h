@@ -15,7 +15,7 @@ public:
 
 	void Render(RenderContext& rc);
 
-	void Appear();//クリボーを三体倒すとステージを出現させるための関数
+	
 
 private:
 	Vector3 m_position;

@@ -1,6 +1,7 @@
 #pragma once
 class Player;
 class Game;
+//using namespace nsK2EngineLow;
 class Enemy1 : public IGameObject
 {
 public:
@@ -27,22 +28,32 @@ public:
 
 	void Enemy1Animation();//アニメーション関数
 
+	void OnHitBone();//骨に当たると死ぬ処理
+
 	void Render(RenderContext& rc);
 
 	void SetPosition(const Vector3& pos);
 	/*{
 		m_position = pos;
     }*/
+
+
+	Vector3 GetBodyPos();
+
+	const Vector3& GetPos()
+	{
+		return m_position;
+		
+	}
 	Vector3 m_position;//エネミーのポジション;
 
 	Game* m_game = nullptr;
+
+	bool IsDead = false;//死んだか死んでないかのフラグ
 private:
 
 	int m_enemy1State = 0;//エネミーのステート
 		
-
-	bool IsDead = false;//死んだか死んでないかのフラグ
-
 	bool DeathAnimation = false;//死んだときにすぐアニメーションが流れないようにするためのフラグ
 
 		bool m_isSearchPlayer = false;//プレイヤーを見つけたか、見つけてないかのフラグ
@@ -73,7 +84,7 @@ private:
         
 		PhysicsGhostObject m_GhostObjBody;//プレイヤーが触れたらダメージを与えるゴーストオブジェクト
 
-		//アニメション再生
+		//アニメーション再生
 		enum EnPlayAnimation
 		{
 			enAnimationClip_Idle,

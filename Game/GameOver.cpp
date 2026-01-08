@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "GameOver.h"
 #include "Game.h"
 #include"Title.h"
@@ -14,24 +14,32 @@ GameOver::~GameOver()
 
 bool GameOver::Start()
 {
-	//‰æ‘œ“Ç‚İ‚İ
-	m_spriteRender.Init("Assets/Sprite/GameOver.dds", 1920.0f, 1080.0f);
+	//ç”»åƒèª­ã¿è¾¼ã¿
+	m_spriteRender.Init("Assets/Sprite/GameOver2.dds", 1920.0f, 1080.0f);
 	return true;
 }
 
 void GameOver::Update()
 {
-	if (g_pad[0]->IsTrigger(enButtonA))
+	if (g_pad[0]->IsTrigger(enButtonStart))
 	{
+		//Gameã‚’å‰Šé™¤
+		Game* game = FindGO<Game>("game");
+		if (game)
+		{
+			DeleteGO(game);
+		}
+
+
 		NewGO<Title>(0, "title");
-		DeleteGO(this);
-		isDeleteRequest = true;
+		
+		isDeleteRequested = true;
 	}
 
-	//íœƒŠƒNƒGƒXƒg‚ª—ˆ‚Ä‚¢‚éê‡‚ÉA‚±‚ÌƒIƒuƒWƒFƒNƒg©g‚ğíœ‚·‚é
-	if (isDeleteRequest ==true)
+	//å‰Šé™¤ãƒªã‚¯ã‚¨ã‚¹ãƒˆãŒæ¥ã¦ã„ã‚‹å ´åˆã«ã€ã“ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆè‡ªèº«ã‚’å‰Šé™¤ã™ã‚‹
+	if (isDeleteRequested ==true)
 	{
-		
+		DeleteGO(this);
 	}
 }
 

@@ -1,17 +1,18 @@
-#pragma once
+ï»¿#pragma once
 class Player;
 class Game;
-class Enemy2:  public IGameObject
+using namespace nsK2EngineLow;
+class Enemy2 : public IGameObject
 {
 public:
-	Enemy2();
+	Enemy2() ;
 	~Enemy2();
 
 	bool Start();
 
 	void Update();
 
-	void Move();//“G‚ÌˆÚ“®ˆ—
+	void Move();//æ•µã®ç§»å‹•å‡¦ç†
 
 	void Tracking();
 
@@ -19,69 +20,83 @@ public:
 
 	void SetPosition(const Vector3& pos);
 
-	Game* m_game = nullptr;
-private:
-	ModelRender m_modelRender;//ƒGƒlƒ~[‚Q‚Ìƒ‚ƒfƒ‹(ƒXƒPƒ‹ƒgƒ“)
+	void Rotation();//å›è»¢ã®é–¢æ•°
 
-	ModelRender m_modelBoneRender;//ƒGƒlƒ~[‚ğ“¥‚İ‚Â‚¯‚½Œã‚Ìƒ‚ƒfƒ‹
+	void SearchPlayer();//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’è¦‹ã¤ã‘ãŸã‹ã©ã†ã‹ã®é–¢æ•°
+
+	void Damege(Player* player);//ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ã‚‹é–¢æ•°
+
+	//void DropBone();//éª¨ã‚’è½ã¨ã™å‡¦ç†
+
+	void Dead();//æ­»ã‚“ã ã¨ãã®å‡¦ç†
+
+	void ManageState();//ã‚¹ãƒ†ãƒ¼ãƒˆç®¡ç†é–¢æ•°
+
+	void Enemy2Animation();//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é–¢æ•°
+
+	void OnHitBone2();//éª¨ã«å½“ãŸã‚‹ã¨æ­»ã¬å‡¦ç†
+
+	
+
+	Vector3 GetBodyPos2();
+
+	Vector3 m_position;//ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã®ãƒã‚¸ã‚·ãƒ§ãƒ³
+
+	bool IsDead = false;//æ­»ã‚“ã ã‹æ­»ã‚“ã§ãªã„ã‹ã®ãƒ•ãƒ©ã‚°
+	const Vector3& GetPos()
+	{
+		return m_position;
+	}
+
+	Game* m_game = nullptr;
+
+
+private:
+	ModelRender m_modelRender;//ã‚¨ãƒãƒŸãƒ¼ï¼’ã®ãƒ¢ãƒ‡ãƒ«(ã‚¹ã‚±ãƒ«ãƒˆãƒ³)
+
+	
 
 	//SphereCollider m_sphereColider;
 
 	BoxCollider m_BoxCollider;
 
 	CharacterController m_characterController;
-	Vector3 m_position;//ƒXƒPƒ‹ƒgƒ“‚Ìƒ|ƒWƒVƒ‡ƒ“
 
-	void Rotation();//‰ñ“]‚ÌŠÖ”
+	int m_enemy2State = 0;//ã‚¨ãƒãƒŸãƒ¼ã®ã‚¹ãƒ†ãƒ¼ãƒˆ
 
-	void SearchPlayer();//ƒvƒŒƒCƒ„[‚ğŒ©‚Â‚¯‚½‚©‚Ç‚¤‚©‚ÌŠÖ”
+	bool isCreateBone = false;//éª¨ã‚’ç”Ÿæˆã™ã‚‹ãƒ•ãƒ©ã‚°
 
-	void Damege(Player* player);//ƒ_ƒ[ƒW‚ğó‚¯‚éŠÖ”
+	bool DeathAnimation = false;//æ­»ã‚“ã ã¨ãã«ã™ãã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãŒæµã‚Œãªã„ã‚ˆã†ã«ã™ã‚‹ãŸã‚ã®ãƒ•ãƒ©ã‚°
 
-	void Dead();//€‚ñ‚¾‚Æ‚«‚Ìˆ—
+	bool IsSearchPlayer = false;//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’è¦‹ã¤ã‘ãŸã‹ã€è¦‹ã¤ã‘ã¦ãªã„ã‹ã®ãƒ•ãƒ©ã‚°
 
-	void ManageState();//ƒXƒe[ƒgŠÇ—ŠÖ”
-
-	void Enemy2Animation();//ƒAƒjƒ[ƒVƒ‡ƒ“ŠÖ”
-
-
-	
-	/*{
-		m_position = pos;
-	}*/
-
-	
-
-	
-private:
-
-	int m_enemy1State = 0;//ƒGƒlƒ~[‚ÌƒXƒe[ƒg
-
-
-	bool IsDead = false;//€‚ñ‚¾‚©€‚ñ‚Å‚È‚¢‚©‚Ìƒtƒ‰ƒO
-
-	bool DeathAnimation = false;//€‚ñ‚¾‚Æ‚«‚É‚·‚®ƒAƒjƒ[ƒVƒ‡ƒ“‚ª—¬‚ê‚È‚¢‚æ‚¤‚É‚·‚é‚½‚ß‚Ìƒtƒ‰ƒO
-
-	bool m_isSearchPlayer = false;//ƒvƒŒƒCƒ„[‚ğŒ©‚Â‚¯‚½‚©AŒ©‚Â‚¯‚Ä‚È‚¢‚©‚Ìƒtƒ‰ƒO
 
 	Vector3 m_BoxColliderScale = Vector3(100.0f, 100.0f, 100.0f);
 
-	Vector3 m_forward;//‘O•ûŒü
+	Vector3 m_forward;//å‰æ–¹å‘
 
-	Vector3 m_moveSpeed;//ˆÚ“®‘¬“x
+	Vector3 m_moveSpeed;//ç§»å‹•é€Ÿåº¦
 
 	Vector3 m_HeadScale = Vector3(50.0f, 50.0f, 50.0f);
 
+
+
 	//Vector3 m_BodyScale = Vector3(100.0f, 100.0f, 100.0f);
 
-	Quaternion m_rotation;//‰ñ“]
+	Quaternion m_rotation;//å›è»¢
 
 	Player* m_player = nullptr;
 
-	//“ª‚ÌƒS[ƒXƒgƒIƒuƒWƒFƒNƒg
+	//Bone_Obj* m_boneObj = nullptr;
+
+	Enemy2* m_enemy2 = nullptr;
+
+	
+
+	//é ­ã®ã‚´ãƒ¼ã‚¹ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	PhysicsGhostObject m_HeadGhostObj;
 
-	//“·‘Ì‚ÌƒS[ƒXƒgƒIƒuƒWƒFƒNƒg
+	//èƒ´ä½“ã®ã‚´ãƒ¼ã‚¹ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	PhysicsGhostObject m_BodyGhostObj;
 
 	

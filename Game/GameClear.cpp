@@ -1,9 +1,12 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "GameClear.h"
 #include "Title.h"
+#include"BossStage.h"
+#include"Game.h"
+
 GameClear::GameClear()
 {
-	m_gameClearSpriteRender.Init("Assets/Suprite/GameClear.dds", 1920.0f, 1080.0f);
+	m_gameClearSpriteRender.Init("Assets/Sprite/GameClear.dds", 1920.0f, 1080.0f);
 }
 
 GameClear::~GameClear()
@@ -11,17 +14,20 @@ GameClear::~GameClear()
 
 }
 
+
+
+
 void GameClear::Update()
 {
-	if (g_pad[0]->IsTrigger(enButtonA))
+	if (g_pad[0]->IsTrigger(enButtonB))
 	{
-		//ƒ^ƒCƒgƒ‹‚ÌƒIƒuƒWƒFƒNƒg‚ğì‚é
-		NewGO<Title>(0, "Title");
-		isDeleteRequested = true;
-	}
-	//íœƒŠƒNƒGƒXƒg‚ª—ˆ‚Ä‚¢‚éê‡‚ÉA‚±‚ÌƒIƒuƒWƒFƒNƒg©g‚ğíœ‚·‚é
-	if (isDeleteRequested == true)//‚±‚ÌƒIƒuƒWƒFƒNƒg‚ªíœ‚ğ—v‹‚³‚ê‚½‚©‚Ç‚¤‚©v‚ğ”»’è‚µAíœ‚ğÀs‚·‚éˆ—
-	{
+		Game* game = FindGO<Game>("game");
+		if (game)
+		{
+			DeleteGO(game);
+		}
+		//ã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢ã™ã‚‹ã¨BossStageä½œã‚‹
+		NewGO<BossStage>(0, "bossStage");
 		DeleteGO(this);
 	}
 }

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 class Game;
 class GameOver : public IGameObject
 {
@@ -16,7 +16,7 @@ public:
 private:
 	SpriteRender m_spriteRender;
 
-	bool isDeleteRequest = false;//íœ—v‹ƒtƒ‰ƒO
+	bool isDeleteRequested = false;//å‰Šé™¤è¦æ±‚ãƒ•ãƒ©ã‚°
 
 	Game* m_game = nullptr;
 };
